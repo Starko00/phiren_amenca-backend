@@ -14,7 +14,7 @@ const projectSchema = new mongoose.Schema({
     ],
   },
   documentation: [String],
-  img: String,
+  Projectimg: String,
   primaryText: {
     type: String,
 

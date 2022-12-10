@@ -1,9 +1,12 @@
 const projects = require("./DB/Models/projectModel");
 
+
+// Gets one project by id
 exports.getProject = async (req, res, next) => {
   try {
-    const id = req.body.projectId;
+    const id = req.body._id;
     const project = await projects.findById(id);
+    console.log(id)
     res.status(200).json({
       msg: `Project`,
       project,
@@ -13,6 +16,7 @@ exports.getProject = async (req, res, next) => {
   }
 };
 
+// Creates a project
 exports.createProject = async (req, res, next) => {
   try {
     const data = req.body;
@@ -37,16 +41,57 @@ exports.createProject = async (req, res, next) => {
     });
   }
 };
+
+// Gets all projects with all fields
 exports.getAllProjects = async (req, res, next) => {
   try {
-    const projectList = await projects.find().select("_id projectName projectYear");
+    const projectList = await projects
+      .find();
     res.status(200).json({
-        
-        msg: "Projects foudn",
-        projectList 
-
-        });
+      msg: "Projects found ",
+      projectList,
+    });
   } catch (error) {
     res.status(201).json(error);
   }
 };
+
+//Filters projects by year
+exports.getAllProjectsInAyear = async(req,res,next) =>{
+  
+  try {
+   const requestedYear = await new Date(req.body.yearFilter) 
+   const requestedYearEnd = await new Date(String(parseInt(req.body.yearFilter)-1))
+   console.log(requestedYearEnd)
+   const projectList = await projects.find( {projectYear:{$gt:requestedYearEnd, $lte:requestedYear}}).select("projectImg projectName  secodnaryText")
+
+   res.status(200).json({
+    data:projectList
+   })
+
+
+
+  } catch (error) {
+    res.status(201).json({
+      error
+    })
+  }
+}
+//  Gets the list of projects, their names and years -- brief info
+exports.getAllProjectsShor = async(req,res,next) =>{
+  try {
+    const projectList = await projects
+      .find()
+      .select("_id projectName projectYear");
+    res.status(200).json({
+      msg: "Projects found ",
+      projectList,
+    });
+  } catch (error) {
+    
+  }
+}
+
+//Delete a project
+
+//Update the project

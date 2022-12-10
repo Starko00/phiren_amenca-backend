@@ -2,7 +2,7 @@ const express = require("express");
 const morgan = require("morgan");
 const projectRouter = require("./Routers/projectRouter");
 const dotenv = require("dotenv");
-
+const landingRouter = require('./Routers/mainPageRouter')
 const mongoose = require('mongoose')
 
 
@@ -17,7 +17,7 @@ app.use(morgan("short")); //Logs requests
 app.use(express.json()); //Enables req reading
 
 app.use("/phiramenca/api/v1",projectRouter)
-
+app.use("/phiramenca/api/v1/landing",landingRouter)
 
 app.listen(port, () => {
   console.log(`App running on  PORT:  ${port}`);
