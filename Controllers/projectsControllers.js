@@ -1,12 +1,12 @@
 const projects = require("./DB/Models/projectModel");
-
+const multer = require('multer')
 
 // Gets one project by id
 exports.getProject = async (req, res, next) => {
   try {
     const id = req.body._id;
     const project = await projects.findById(id);
-    console.log(id)
+    console.log(id);
     res.status(200).json({
       msg: `Project`,
       project,
@@ -45,8 +45,7 @@ exports.createProject = async (req, res, next) => {
 // Gets all projects with all fields
 exports.getAllProjects = async (req, res, next) => {
   try {
-    const projectList = await projects
-      .find();
+    const projectList = await projects.find();
     res.status(200).json({
       msg: "Projects found ",
       projectList,
@@ -57,28 +56,28 @@ exports.getAllProjects = async (req, res, next) => {
 };
 
 //Filters projects by year
-exports.getAllProjectsInAyear = async(req,res,next) =>{
-  
+exports.getAllProjectsInAyear = async (req, res, next) => {
   try {
-   const requestedYear = await new Date(req.body.yearFilter) 
-   const requestedYearEnd = await new Date(String(parseInt(req.body.yearFilter)-1))
-   console.log(requestedYearEnd)
-   const projectList = await projects.find( {projectYear:{$gt:requestedYearEnd, $lte:requestedYear}}).select("projectImg projectName  secodnaryText")
+    const requestedYear = await new Date(req.body.yearFilter);
+    const requestedYearEnd = await new Date(
+      String(parseInt(req.body.yearFilter) - 1)
+    );
+    console.log(requestedYearEnd);
+    const projectList = await projects
+      .find({ projectYear: { $gt: requestedYearEnd, $lte: requestedYear } })
+      .select("projectImg projectName  secodnaryText");
 
-   res.status(200).json({
-    data:projectList
-   })
-
-
-
+    res.status(200).json({
+      data: projectList,
+    });
   } catch (error) {
     res.status(201).json({
-      error
-    })
+      error,
+    });
   }
-}
+};
 //  Gets the list of projects, their names and years -- brief info
-exports.getAllProjectsShor = async(req,res,next) =>{
+exports.getAllProjectsShor = async (req, res, next) => {
   try {
     const projectList = await projects
       .find()
@@ -87,11 +86,72 @@ exports.getAllProjectsShor = async(req,res,next) =>{
       msg: "Projects found ",
       projectList,
     });
+  } catch (error) {}
+};
+
+//Delete a project
+exports.deleteProject = async (req,res,next)=>{
+  try {
+    const deletedProject = await projects.findByIdAndDelete(req.body._id)
+
+    res.status(200).json({
+      msg:`Project ${req.body._id} deleted`
+    })
+  } catch (error) {
+    res.status(201).json({
+      error
+    })
+  }
+}
+//Update the project
+
+exports.updateProject = async (req, res, next) => {
+  try {
+    
+    const data = req.body.data
+    console.log(req.body._id)
+
+    const updatedProject = await projects.findByIdAndUpdate(
+      { _id: req.body._id },
+      data,
+      {
+        new: true,
+        runValidators: true,
+      }
+    );
+    console.log(updatedProject)
+    res.status(200).json({ msg: "Landing page updated", updatedProject });
+  } catch (error) {
+    res.status(201).json({
+      error: error,
+    });
+  }
+};
+
+
+//Upload project files/img
+
+
+const fileStorage = multer.diskStorage({
+  destination:(req,file,cb)=>{
+    cb(null,'./public/uploads/projects')
+  },
+  filename:(req,file,cb)=>{
+    
+    cb(null,req.body.name+'----'+file.originalname)
+  }
+
+})
+
+const upload = multer({storage:fileStorage})
+
+exports.uploadProjectFile = upload.single("document")
+
+exports.uploadFiles = (req,res,next)=>{
+  try {
+    
+    res.send("Single file upload succesful")
   } catch (error) {
     
   }
 }
-
-//Delete a project
-
-//Update the project
