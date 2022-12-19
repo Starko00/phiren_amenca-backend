@@ -13,7 +13,10 @@ const projectSchema = new mongoose.Schema({
       "The project can't be created without assigning a propper date.",
     ],
   },
-  documentation: [String],
+  documentation: {
+    type:[String],
+    uniqe:true
+  },
   Projectimg: String,
   primaryText: {
     type: String,

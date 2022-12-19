@@ -1,5 +1,6 @@
+const { findByIdAndUpdate } = require("./DB/Models/projectModel");
 const projects = require("./DB/Models/projectModel");
-const multer = require('multer')
+const multer = require("multer");
 
 // Gets one project by id
 exports.getProject = async (req, res, next) => {
@@ -90,26 +91,25 @@ exports.getAllProjectsShor = async (req, res, next) => {
 };
 
 //Delete a project
-exports.deleteProject = async (req,res,next)=>{
+exports.deleteProject = async (req, res, next) => {
   try {
-    const deletedProject = await projects.findByIdAndDelete(req.body._id)
+    const deletedProject = await projects.findByIdAndDelete(req.body._id);
 
     res.status(200).json({
-      msg:`Project ${req.body._id} deleted`
-    })
+      msg: `Project ${req.body._id} deleted`,
+    });
   } catch (error) {
     res.status(201).json({
-      error
-    })
+      error,
+    });
   }
-}
+};
 //Update the project
 
 exports.updateProject = async (req, res, next) => {
   try {
-    
-    const data = req.body.data
-    console.log(req.body._id)
+    const data = req.body.data;
+    console.log(req.body._id);
 
     const updatedProject = await projects.findByIdAndUpdate(
       { _id: req.body._id },
@@ -119,7 +119,7 @@ exports.updateProject = async (req, res, next) => {
         runValidators: true,
       }
     );
-    console.log(updatedProject)
+    console.log(updatedProject);
     res.status(200).json({ msg: "Landing page updated", updatedProject });
   } catch (error) {
     res.status(201).json({
@@ -128,30 +128,71 @@ exports.updateProject = async (req, res, next) => {
   }
 };
 
-
 //Upload project files/img
 
-
 const fileStorage = multer.diskStorage({
-  destination:(req,file,cb)=>{
-    cb(null,'./public/uploads/projects')
+  destination: (req, file, cb) => {
+    cb(null, "./public/uploads/projects");
   },
-  filename:(req,file,cb)=>{
-    
-    cb(null,req.body.name+'----'+file.originalname)
-  }
+  filename: (req, file, cb) => {
+    cb(null, req.body.id + "----" + file.originalname);
+  },
+});
 
-})
+const upload = multer({ storage: fileStorage });
 
-const upload = multer({storage:fileStorage})
+exports.uploadProjectFile = upload.single("document");
 
-exports.uploadProjectFile = upload.single("document")
-
-exports.uploadFiles = (req,res,next)=>{
+exports.uploadFiles = async (req, res, next) => {
   try {
-    
-    res.send("Single file upload succesful")
+    const filename = req.file.filename;
+    const allFiles = await projects.findById({ _id: req.body.id });
+    const updatedFileList = await projects.findByIdAndUpdate(
+      { _id: req.body.id },
+      { $push: { documentation: filename } },
+      {
+        new: true,
+        unique: true,
+        runValidators: true,
+      }
+    );
+
+    res.status(200).json({
+      msg: "File uploaded",
+      updatedFileList,
+    });
   } catch (error) {
-    
+    res.status(201).json({
+      error,
+    });
   }
-}
+};
+// Potrebno definisati odredjene filtere kako se ne bi uploadovali fajlovi koji vec postoje
+exports.deleteFile = async (req, res, next) => {
+  try {
+    const fileToDrop = req.body.deleteFile;
+    console.log(req)
+    const deletedFile = await projects.findByIdAndUpdate(
+      { _id: req.body.id },
+      {
+        $pull: { documentation: fileToDrop },
+      },
+      {
+        new: true,
+        unique: true,
+        runValidators: true,
+      }
+    );
+
+    res.status(200).json({
+      msg:"File deleted",
+      deletedFile
+    })
+
+
+  } catch (error) {
+    res.status(201).json({
+      error
+    })
+  }
+};

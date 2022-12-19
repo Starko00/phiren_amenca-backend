@@ -1,0 +1,4 @@
+{
+    "appService.defaultWebAppToDeploy": "/subscriptions/29896de9-05d1-446c-854e-b16a659dab7a/appservices/subscriptions/29896de9-05d1-446c-854e-b16a659dab7a/resourceGroups/appsvc_linux_centralus_basic/providers/Microsoft.Web/sites/phiraamenc-backend",
+    "appService.deploySubpath": "."
+}

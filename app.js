@@ -4,7 +4,7 @@ const projectRouter = require("./Routers/projectRouter");
 const dotenv = require("dotenv");
 const landingRouter = require('./Routers/mainPageRouter')
 const mongoose = require('mongoose')
-
+const path = require('path')
 
 dotenv.config({path:'./config.env'}) // Config of ENV
 
@@ -15,6 +15,8 @@ const app = express(); // Server start
 
 app.use(morgan("short")); //Logs requests
 app.use(express.json()); //Enables req reading
+
+app.use(express.static(path.join(__dirname,'public')));
 
 app.use("/phiramenca/api/v1",projectRouter)
 app.use("/phiramenca/api/v1/landing",landingRouter)

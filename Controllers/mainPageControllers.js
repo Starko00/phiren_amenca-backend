@@ -1,3 +1,4 @@
+const { json } = require("express");
 const landingPage = require("./DB/Models/mainPageModel");
 
 exports.createLandingPage = async (req, res, next) => {
@@ -41,3 +42,17 @@ exports.updateLandingPage = async (req, res, next) => {
     });
   }
 };
+
+exports.getLandingPage =async (req,res,next)=>{
+  try {
+      const landingPageData = await landingPage.find()
+      res.status(200).json(
+        landingPageData
+      )
+
+
+
+  } catch (error) {
+    
+  }
+}
