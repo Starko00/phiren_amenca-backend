@@ -196,3 +196,44 @@ exports.deleteFile = async (req, res, next) => {
     })
   }
 };
+
+
+
+// Img uploads
+const imgStorage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "./public/uploads/projects");
+  },
+  filename: (req, file, cb) => {
+    cb(null, req.body.id + "----" + "projectImg----" +file.originalname);
+  },
+})
+const imgUpload = multer({ storage: imgStorage });
+
+exports.uploadImg = imgUpload.single("projectImg");
+
+
+exports.uploadProjectImage = async (req, res, next) => {
+  try {
+    const filename = req.file.filename;
+    const allFiles = await projects.findById({ _id: req.body.id });
+    const updatedFileList = await projects.findByIdAndUpdate(
+      { _id: req.body.id },
+      { projectImg:filename},
+      {
+        new: true,
+        unique: true,
+        runValidators: true,
+      }
+    );
+
+    res.status(200).json({
+      msg: "File uploaded",
+      updatedFileList,
+    });
+  } catch (error) {
+    res.status(201).json({
+      error,
+    });
+  }
+};

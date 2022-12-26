@@ -21,6 +21,7 @@ const landingSchema = new mongoose.Schema({
     type: String,
     required: [true, "Text-Required!"],
   },
+  aboutUs:String,
 });
 const LandingPage = mongoose.model("LandingPage", landingSchema);
 module.exports = LandingPage;

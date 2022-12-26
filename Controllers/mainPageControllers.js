@@ -10,6 +10,7 @@ exports.createLandingPage = async (req, res, next) => {
       visionAndMissionTittle: req.body.visionAndMissionTittle,
       visionAndMissionText: req.body.visionAndMissionText,
       ourtTeamText: req.body.ourtTeamText,
+      aboutUs:req.body.aboutUs
     });
     res.status(200).json({ msg: "Landing page created", landingPageCreation });
   } catch (error) {
@@ -29,6 +30,7 @@ exports.updateLandingPage = async (req, res, next) => {
         visionAndMissionTittle: req.body.visionAndMissionTittle,
         visionAndMissionText: req.body.visionAndMissionText,
         ourtTeamText: req.body.ourtTeamText,
+        aboutUs:req.body.aboutUs
       },
       {
         new: true,

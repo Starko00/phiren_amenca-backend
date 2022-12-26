@@ -31,6 +31,7 @@ const projectSchema = new mongoose.Schema({
       "The project can't be created without a short description.",
     ],
   },
+  projectImg:String
 });
 const Projects = mongoose.model("Projects", projectSchema);
 module.exports = Projects;
