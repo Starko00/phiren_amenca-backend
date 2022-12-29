@@ -4,6 +4,7 @@ const projectRouter = require("./Routers/projectRouter");
 const dotenv = require("dotenv");
 const landingRouter = require('./Routers/mainPageRouter')
 const teamRouter = require('./Routers/teamRouter')
+const newsRouter = require('./Routers/newsRouter')
 const mongoose = require('mongoose')
 const path = require('path')
 const cors = require('cors')
@@ -25,6 +26,7 @@ app.use(express.static(path.join(__dirname,'public')));
 app.use("/phiramenca/api/v1",projectRouter)
 app.use("/phiramenca/api/v1/landing",landingRouter)
 app.use("/phiramenca/api/v1/team", teamRouter)
+app.use("/phiramenca/api/v1/news",newsRouter)
 
 app.listen(port, () => {
   console.log(`App running on  PORT:  ${port}`);
