@@ -35,7 +35,8 @@ app.use(
             context.parsedUrl.pathname.indexOf("/robots.txt") == 0 ||
             context.parsedUrl.pathname.indexOf("/public") == 0 ||
             context.parsedUrl.pathname.indexOf("/blogImgs") == 0 ||
-            context.parsedUrl.pathname.indexOf("/phiramenca") == 0 
+            context.parsedUrl.pathname.indexOf("/phiramenca") == 0 || 
+            context.parsedUrl.pathname.indexOf("/uploads") == 0 
           ) {
             return context.parsedUrl.pathname;
           } else return "/index.html";
